@@ -7,9 +7,9 @@
         </div>
         <form class="w-full md:w-1/3 flex items-center flex-col bg-base-200 p-16 rounded-xl">
             <h1 class="text-3xl font-bold mb-5">Bejelentkezés</h1>
-            <input type="email" v-model="email" name="email" class="input mb-3 w-full" placeholder="Email cím" required>
+            <input type="text" v-model="username" name="username" class="input mb-3 w-full" placeholder="Felhasznalonev" required>
             <input type="password" name="password" v-model="password" class="input mb-5 w-full" placeholder="Jelszó" required>
-            <input type="submit" value="Belépés" class="btn btn-primary w-full">
+            <input type="submit" :value="processing ? 'Betoltes' : 'Belépés'" :class="`btn btn-primary w-full ${processing ? 'disabled' : ''}`">
         </form>
     </div>
 </template>
@@ -19,27 +19,29 @@ import axios from "axios";
 import { ref, getCurrentInstance } from "vue";
 import router from "../router";
 
-const email = ref("");
+const username = ref("");
 const password = ref("");
 const error = ref("");
+const processing = ref(false);
 
 const errors: any = {
-    INVALID_USER_OR_PASS: "Helytelen felhasználónév vagy jelszó"
+    INVALID_USERNAME_OR_PASSWORD: "Helytelen felhasználónév vagy jelszó"
 };
 
 async function login() {
+    processing.value = true;
     try {
-        const resp = await axios.post(`http://localhost:8080/auth/login`, {
-            username: email.value,
+        const resp = await axios.post(`http://127.0.0.1:8080/auth/login`, {
+            username: username.value,
             password: password.value,
         });
 
         if (resp.data.session) sessionStorage.setItem("session", resp.data.session);
-        router.push("/user/dashboard")
+        router.push("/user/dashboard");
     } catch (err: any) {
-        console.log(err);
+        processing.value = false;
+        if (!err.response.data) return error.value = err.message;
         error.value = err.response.data.error;
-        console.log(err.response.data.error);
     }
 }
 </script>
