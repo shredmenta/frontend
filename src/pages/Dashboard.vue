@@ -14,8 +14,8 @@
             </div>
         </div>
         <div class="flex gap-3 items-start">
-            <Spam :max-amount="50"></Spam>
-            <Jobs :jobs="jobs"></Jobs>
+            <Spam :max-amount="500"></Spam>
+            <Jobs></Jobs>
         </div>
     </div>
 </template>
@@ -43,16 +43,6 @@ const user = ref({
     username: "...",
 });
 
-const jobs = ref([
-    {
-        status: "",
-        id: 0,
-        amount: 0,
-        createdBy: "",
-        jobId: -1,
-    }
-]);
-
 onBeforeMount(async () => {
     const userResp = await axios.get(`${import.meta.env.VITE_API_URL}/user/@me`, {
         headers: {
@@ -66,21 +56,7 @@ onBeforeMount(async () => {
         }
     }) as AxiosResponse;
 
-    const jobsResp = await axios.get(`${import.meta.env.VITE_API_URL}/redmenta/jobs`, {
-        headers: {
-            "Authorization": session || "",
-        },
-    }).catch(err => {
-        if (!err.response.data) return;
-        if (err.response.data.error === "UNAUTHORIZED" ||
-        err.response.data.error === "INVALID_SESSION") {
-            router.push("/auth/login");
-        }
-    }) as AxiosResponse;
-
-    console.log(jobsResp);
-    
     user.value = userResp.data;
-    jobs.value = jobsResp.data;
+
 });
 </script>
