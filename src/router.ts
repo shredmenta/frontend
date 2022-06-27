@@ -19,11 +19,11 @@ const routes: RouteRecordRaw[] = [
         path: "/",
         redirect: () => {
             const session = sessionStorage.getItem("session");
-            
-            if (!session) return { path: '/auth/login' };
-            return { path: '/user/dashboard' };
-        }
-    }
+
+            if (!session) return { path: "/auth/login" };
+            return { path: "/user/dashboard" };
+        },
+    },
 ];
 
 const router = createRouter({
