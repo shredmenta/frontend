@@ -3,6 +3,7 @@ import { createWebHistory, createRouter, RouteRecordRaw } from "vue-router";
 // pages
 import Login from "./pages/Login.vue";
 import Dashboard from "./pages/Dashboard.vue";
+import Settings from "./pages/Settings.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -14,6 +15,11 @@ const routes: RouteRecordRaw[] = [
         path: "/user/dashboard",
         component: Dashboard,
         name: "dashboard",
+    },
+    {
+        path: "/user/settings",
+        component: Settings,
+        name: "settings",
     },
     {
         path: "/",

@@ -110,4 +110,6 @@ onBeforeMount(async () => {
     await loadJobs();
     console.log(jobs.value.length / 10);
 });
+
+defineExpose({ refreshJobs });
 </script>

@@ -72,17 +72,18 @@
         <input
             type="number"
             class="input input-bordered mb-3"
-            placeholder="Mennyiség"
-            :max="props.maxAmount"
+            :placeholder="
+                maxAmount != -1 ? `Mennyiség (max: ${maxAmount})` : `Mennyiség`
+            "
+            :max="maxAmount != -1 ? maxAmount : ''"
             min="1"
             v-model="amount"
             required
         />
-        <input
-            type="submit"
-            :class="`btn btn-success ${isLoading ? 'disabled' : ''}`"
-            value="Mehet!"
-        />
+        <button :class="`btn btn-success ${isLoading ? 'disabled' : ''}`">
+            <Spinner v-if="isLoading" class="h-6 w-6"></Spinner>
+            {{ isLoading ? "" : "Mehet!" }}
+        </button>
     </form>
 </template>
 
@@ -90,6 +91,7 @@
 import { ref } from "vue";
 import axios, { AxiosResponse } from "axios";
 import router from "../router";
+import Spinner from "@/components/Spinner.vue";
 
 const props = defineProps({
     maxAmount: {
@@ -113,6 +115,7 @@ const useDirektcim = ref(true);
 const errors = {
     INVALID_DIREKTCIM: "Érvénytelen direktcím.",
     MISSING_PARAMS: "Hiányzó paraméterek.",
+    PRIVATE_WORKSHEET: "A feladatlap nem publikus.",
 };
 
 async function spam(): Promise<void> {
@@ -121,10 +124,15 @@ async function spam(): Promise<void> {
     const resp = (await axios
         .post(
             `${import.meta.env.VITE_API_URL}/redmenta/spam`,
-            {
-                direktcim: direktcim.value,
-                amount: amount.value,
-            },
+            useDirektcim.value
+                ? {
+                      direktcim: direktcim.value,
+                      amount: amount.value,
+                  }
+                : {
+                      id: id.value,
+                      amount: amount.value,
+                  },
             {
                 headers: {
                     Authorization: session,
