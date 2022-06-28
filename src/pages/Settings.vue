@@ -1,6 +1,6 @@
 <template>
     <Loader :loaded="loaded"></Loader>
-    <div class="px-6 md:p-12 py-6 flex flex-col">
+    <div :class="`px-6 md:p-12 py-6 flex flex-col ${!loaded ? 'hidden' : ''}`">
         <router-link
             to="/user/dashboard"
             class="btn btn-ghost btn-sm mb-3 flex gap-3 self-start"
@@ -8,8 +8,10 @@
             <Icon icon="back"></Icon>
             Vissza
         </router-link>
-        <div class="flex gap-3 items-start">
-            <ul class="bg-base-300 p-3 rounded-3xl flex flex-col flex-1 w-full">
+        <div class="flex flex-col md:flex-row gap-3 items-start">
+            <ul
+                class="bg-base-300 p-3 rounded-3xl flex flex-col md:flex-1 w-full"
+            >
                 <li
                     v-for="category in categories"
                     :key="category.name"
@@ -30,19 +32,30 @@
                     <span class="ml-3">{{ category.friendlyName }}</span>
                 </li>
             </ul>
-            <div class="bg-base-300 flex-[3] rounded-3xl p-8 w-full">
+            <div class="bg-base-300 md:flex-[3] rounded-3xl p-8 w-full">
                 <div v-if="activePage === 'account'">
                     <h1 class="text-4xl mb-3">Fiók</h1>
                     <div
-                        class="p-3 bg-base-200 rounded-xl flex justify-between items-center mb-3"
+                        class="p-3 bg-base-200 rounded-xl flex mb-3 flex-col gap-3"
                     >
-                        <div>
-                            <p class="text-sm text-slate-400">Felhasználónév</p>
-                            <p>{{ user.username }}</p>
+                        <div class="flex justify-between items-center w-full">
+                            <div>
+                                <p class="text-sm text-slate-400">
+                                    Felhasználónév
+                                </p>
+                                <p>{{ user.username }}</p>
+                            </div>
+                            <button class="btn btn-primary">Változtatás</button>
                         </div>
-                        <button class="btn btn-primary">Változtatás</button>
+                        <div class="flex justify-between items-center w-full">
+                            <div>
+                                <p class="text-sm text-slate-400">Csomag</p>
+                                <p>{{ user.plan.planType }}</p>
+                            </div>
+                            <button class="btn btn-primary">Kezelés</button>
+                        </div>
                     </div>
-                    <div class="flex gap-3">
+                    <div class="flex gap-3 flex-col items-start md:flex-row">
                         <label
                             for="passwordChangeModal"
                             class="btn modal-button btn-primary"
@@ -56,32 +69,46 @@
     </div>
     <input type="checkbox" id="passwordChangeModal" class="modal-toggle" />
     <Modal id="passwordChangeModal">
-        <h3 class="font-bold text-lg mb-3">Jelszó változtatás</h3>
-        <input
-            type="text"
-            class="input input-bordered w-full mb-3"
-            placeholder="Régi jelszó"
-            v-model="oldPassword"
-            required
-        />
-        <input
-            type="text"
-            class="input input-bordered w-full mb-3"
-            placeholder="Új jelszó"
-            v-model="newPassword"
-            required
-        />
-        <input
-            type="text"
-            class="input input-bordered w-full"
-            placeholder="Új jelszó megerősítése"
-            v-model="newPasswordAgain"
-            required
-        />
-        <div class="modal-action">
-            <label for="passwordChangeModal" class="btn">Vissza</label>
-            <button class="btn btn-primary">Mentés</button>
-        </div>
+        <form @submit.prevent="changePassword">
+            <h3 class="font-bold text-lg mb-3">Jelszó változtatás</h3>
+            <div class="alert alert-error mb-3" v-if="error">
+                <div>
+                    <Icon icon="exclamation-circle"></Icon>
+                    {{ error }}
+                </div>
+            </div>
+            <input
+                type="password"
+                class="input input-bordered w-full mb-3"
+                placeholder="Régi jelszó"
+                v-model="oldPassword"
+                required
+            />
+            <input
+                type="password"
+                class="input input-bordered w-full mb-3"
+                placeholder="Új jelszó"
+                v-model="newPassword"
+                required
+            />
+            <input
+                type="password"
+                class="input input-bordered w-full"
+                placeholder="Új jelszó megerősítése"
+                v-model="newPasswordAgain"
+                required
+            />
+            <div class="modal-action">
+                <label for="passwordChangeModal" class="btn">Vissza</label>
+                <input
+                    value="Mentés"
+                    type="submit"
+                    :class="`btn btn-primary ${
+                        passwordLoading ? 'loading' : ''
+                    }`"
+                />
+            </div>
+        </form>
     </Modal>
 </template>
 
@@ -122,6 +149,9 @@ const oldPassword = ref("");
 const newPassword = ref("");
 const newPasswordAgain = ref("");
 
+const passwordLoading = ref(false);
+const error = ref<any>(null);
+
 const user = ref({
     plan: {
         planType: "...",
@@ -139,6 +169,21 @@ const user = ref({
         lastSpam: 0,
     },
 });
+
+async function changePassword() {
+    passwordLoading.value = true;
+
+    if (newPassword.value != newPasswordAgain.value)
+        return (error.value = "A jelszavak nem egyeznek");
+
+    await axios
+        .patch(`${import.meta.env.VITE_API_URL}/user/@me/password`, {
+            password: newPassword.value,
+        })
+        .catch((err) => {
+            error.value = err.response.data.error;
+        });
+}
 
 async function loadUser() {
     user.value = (
