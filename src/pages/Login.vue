@@ -71,7 +71,7 @@ const errors: any = {
 async function login() {
     processing.value = true;
     try {
-        const resp = await axios.post(`http://127.0.0.1:8080/auth/login`, {
+        const resp = await axios.post("/auth/login", {
             username: username.value,
             password: password.value,
         });

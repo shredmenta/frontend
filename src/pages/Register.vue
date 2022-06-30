@@ -81,7 +81,7 @@ const errors: any = {
 async function register() {
     processing.value = true;
     try {
-        const resp = await axios.post(`http://127.0.0.1:8080/auth/register`, {
+        const resp = await axios.post("/auth/register", {
             username: username.value,
             password: password.value,
             invite: invite.value,
