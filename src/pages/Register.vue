@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import axios from "axios";
+import axios from "../api";
 import { ref } from "vue";
 import router from "../router";
 import { XIcon, ExclamationCircleIcon } from "@heroicons/vue/outline";

@@ -53,11 +53,10 @@
 </template>
 
 <script setup lang="ts">
-import axios from "axios";
+import axios from "../api";
 import { ref } from "vue";
 import router from "../router";
 import { ExclamationCircleIcon, XIcon } from "@heroicons/vue/outline";
-import * as api from "../api";
 
 const username = ref("");
 const password = ref("");
@@ -79,7 +78,7 @@ async function login() {
         if (resp.data.session)
             sessionStorage.setItem("session", resp.data.session);
 
-        (api.default.defaults as any).headers["Authorization"] =
+        (axios.defaults as any).headers["Authorization"] =
             resp.data.session;
 
         router.push("/user/dashboard");
