@@ -1,6 +1,6 @@
 <template>
     <div
-        @submit.prevent="login"
+        @submit.prevent="register"
         class="w-full h-full flex items-center justify-center bg-login bg-cover"
     >
         <div
@@ -21,7 +21,7 @@
         <form
             class="w-full md:w-1/3 flex items-center flex-col bg-base-200 p-16 rounded-xl"
         >
-            <h1 class="text-3xl font-bold mb-5">Bejelentkezés</h1>
+            <h1 class="text-3xl font-bold mb-5">Regisztráció</h1>
             <input
                 type="text"
                 v-model="username"
@@ -39,15 +39,23 @@
                 required
             />
             <input
+                type="text"
+                name="invite"
+                v-model="invite"
+                class="input mb-5 w-full"
+                placeholder="Meghívó"
+                required
+            />
+            <input
                 type="submit"
-                value="Belépés"
+                value="Regisztrálás"
                 :class="`btn btn-primary w-full mb-3 ${
                     processing ? 'btn-loading' : ''
                 }`"
             />
-            <router-link class="link self-start" to="/auth/register"
-                >Még nincs fiókod? Regisztrálj itt.</router-link
-            >
+            <router-link to="/auth/login" class="self-start link">
+                Már van fiókod? Jelentkezz be itt.
+            </router-link>
         </form>
     </div>
 </template>
@@ -56,32 +64,31 @@
 import axios from "axios";
 import { ref } from "vue";
 import router from "../router";
-import { ExclamationCircleIcon, XIcon } from "@heroicons/vue/outline";
-import * as api from "../api";
+import { XIcon, ExclamationCircleIcon } from "@heroicons/vue/outline";
 
 const username = ref("");
 const password = ref("");
+const invite = ref("");
+
 const error = ref("");
 const processing = ref(false);
 
 const errors: any = {
-    INVALID_USERNAME_OR_PASSWORD: "Helytelen felhasználónév vagy jelszó",
+    USERNAME_TAKEN: "A megadott felhasználónév már foglalt.",
+    INVALID_INVITE: "A megadott meghivo nem ervenyes.",
 };
 
-async function login() {
+async function register() {
     processing.value = true;
     try {
-        const resp = await axios.post(`http://127.0.0.1:8080/auth/login`, {
+        const resp = await axios.post(`http://127.0.0.1:8080/auth/register`, {
             username: username.value,
             password: password.value,
+            invite: invite.value,
         });
 
         if (resp.data.session)
             sessionStorage.setItem("session", resp.data.session);
-
-        (api.default.defaults as any).headers["Authorization"] =
-            resp.data.session;
-
         router.push("/user/dashboard");
     } catch (err: any) {
         processing.value = false;

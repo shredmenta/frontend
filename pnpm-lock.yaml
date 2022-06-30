@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@heroicons/vue': ^1.0.6
   '@types/node': ^18.0.0
   '@vitejs/plugin-vue': ^2.3.3
   autoprefixer: ^10.4.7
@@ -15,6 +16,7 @@ specifiers:
   vue-tsc: ^0.34.7
 
 dependencies:
+  '@heroicons/vue': 1.0.6_vue@3.2.37
   axios: 0.27.2
   daisyui: 2.15.2_ugi4xkrfysqkt4c4y6hkyfj344
   vue: 3.2.37
@@ -49,6 +51,14 @@ packages:
     dependencies:
       '@babel/helper-validator-identifier': 7.16.7
       to-fast-properties: 2.0.0
+
+  /@heroicons/vue/1.0.6_vue@3.2.37:
+    resolution: {integrity: sha512-ng2YcCQrdoQWEFpw+ipFl2rZo8mZ56v0T5+MyfQQvNqfKChwgP6DMloZLW+rl17GEcHkE3H82UTAMKBKZr4+WA==}
+    peerDependencies:
+      vue: '>= 3'
+    dependencies:
+      vue: 3.2.37
+    dev: false
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}

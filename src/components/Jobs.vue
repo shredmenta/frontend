@@ -63,7 +63,7 @@
 <script lang="ts" setup>
 import Job from "./Job.vue";
 import router from "../router";
-import axios, { AxiosResponse } from "axios";
+import axios from "../api";
 import { onBeforeMount, ref } from "vue";
 
 const session = sessionStorage.getItem("session");
@@ -80,26 +80,12 @@ type Job = {
     createdAt: 0;
 };
 
-let jobs = ref([] as Job[]);
+let jobs = ref<Job[]>([]);
 
 async function loadJobs() {
-    jobs.value = (
-        (await axios
-            .get(`${import.meta.env.VITE_API_URL}/redmenta/jobs`, {
-                headers: {
-                    Authorization: session || "",
-                },
-            })
-            .catch((err) => {
-                if (!err.response.data) return;
-                if (
-                    err.response.data.error === "UNAUTHORIZED" ||
-                    err.response.data.error === "INVALID_SESSION"
-                ) {
-                    router.push("/auth/login");
-                }
-            })) as AxiosResponse
-    ).data;
+    const resp = await axios.get("/redmenta/jobs");
+    jobs.value = resp.data;
+    console.log(jobs.value);
 }
 
 async function refreshJobs() {

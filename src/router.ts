@@ -1,9 +1,13 @@
 import { createWebHistory, createRouter, RouteRecordRaw } from "vue-router";
 
 // pages
-import Login from "./pages/Login.vue";
-import Dashboard from "./pages/Dashboard.vue";
-import Settings from "./pages/Settings.vue";
+import Login from "@/pages/Login.vue";
+import Dashboard from "@/pages/Dashboard.vue";
+import Settings from "@/pages/Settings.vue";
+import Register from "@/pages/Register.vue";
+
+import AccountSettings from "@/pages/settings/AccountSettings.vue";
+import InviteSettings from "@/pages/settings/InviteSettings.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -20,6 +24,24 @@ const routes: RouteRecordRaw[] = [
         path: "/user/settings",
         component: Settings,
         name: "settings",
+        children: [
+            {
+                component: AccountSettings,
+                name: "account",
+                path: "/user/settings/account",
+                alias: "",
+            },
+            {
+                component: InviteSettings,
+                name: "invites",
+                path: "/user/settings/invites",
+            },
+        ],
+    },
+    {
+        path: "/auth/register",
+        component: Register,
+        name: "register",
     },
     {
         path: "/",

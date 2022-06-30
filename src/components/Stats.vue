@@ -10,7 +10,7 @@
             <div class="stat-title">Lejár</div>
             <div class="stat-value">
                 {{
-                    user.planExpires === 0
+                    user.planExpires <= 0
                         ? "Soha"
                         : new Date(user.planExpires).toLocaleDateString()
                 }}
