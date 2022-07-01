@@ -74,7 +74,7 @@ async function login() {
             username: username.value,
             password: password.value,
         });
-        if (resp.data.err) return (error.value = resp.data.err);
+        if (resp.data.error) return (error.value = resp.data.error);
 
         if (resp.data.session) {
             sessionStorage.setItem("session", resp.data.session);
