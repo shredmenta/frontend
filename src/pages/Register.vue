@@ -86,14 +86,19 @@ async function register() {
             password: password.value,
             invite: invite.value,
         });
+        if (resp.data.err) return (error.value = resp.data.err);
 
-        if (resp.data.session)
+        if (resp.data.session) {
             sessionStorage.setItem("session", resp.data.session);
-        router.push("/user/dashboard");
+            (axios.defaults.headers as any)["Authorization"] =
+                resp.data.session;
+
+            router.push("/user/dashboard");
+        }
     } catch (err: any) {
+        error.value = err?.message;
+    } finally {
         processing.value = false;
-        if (!err.response.data) return (error.value = err.message);
-        error.value = err.response.data.error;
     }
 }
 </script>

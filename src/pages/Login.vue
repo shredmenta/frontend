@@ -70,22 +70,23 @@ const errors: any = {
 async function login() {
     processing.value = true;
     try {
-        const resp = await axios.post("/auth/login", {
+        const resp = await axios.post("/auth/register", {
             username: username.value,
             password: password.value,
         });
+        if (resp.data.err) return (error.value = resp.data.err);
 
-        if (resp.data.session)
+        if (resp.data.session) {
             sessionStorage.setItem("session", resp.data.session);
+            (axios.defaults.headers as any)["Authorization"] =
+                resp.data.session;
 
-        (axios.defaults as any).headers["Authorization"] =
-            resp.data.session;
-
-        router.push("/user/dashboard");
+            router.push("/user/dashboard");
+        }
     } catch (err: any) {
+        error.value = err?.message;
+    } finally {
         processing.value = false;
-        if (!err.response.data) return (error.value = err.message);
-        error.value = err.response.data.error;
     }
 }
 </script>
