@@ -70,10 +70,11 @@ const errors: any = {
 async function login() {
     processing.value = true;
     try {
-        const resp = await axios.post("/auth/register", {
+        const resp = await axios.post("/auth/login", {
             username: username.value,
             password: password.value,
         });
+
         if (resp.data.error) return (error.value = resp.data.error);
 
         if (resp.data.session) {
