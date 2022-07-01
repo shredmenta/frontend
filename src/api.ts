@@ -11,6 +11,12 @@ const axios = new Axios({
     },
 });
 
+axios.interceptors.request.use(async (req: any) => {
+    req.headers["Content-Type"] = "application/json";
+    req.data = req.data ? JSON.stringify(req.data) : undefined;
+    return req;
+});
+
 axios.interceptors.response.use(async (resp) => {
     resp.data = JSON.parse(resp.data) || resp.data;
 

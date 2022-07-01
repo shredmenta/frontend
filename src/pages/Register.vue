@@ -96,6 +96,7 @@ async function register() {
             router.push("/user/dashboard");
         }
     } catch (err: any) {
+        console.log(error);
         error.value = err?.message;
     } finally {
         processing.value = false;
