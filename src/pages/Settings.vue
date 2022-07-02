@@ -4,7 +4,7 @@
             to="/user/dashboard"
             class="btn btn-ghost btn-sm mb-3 flex gap-3 self-start"
         >
-            <Icon icon="back"></Icon>
+            <ArrowLeftIcon class="w-6 h-6"></ArrowLeftIcon>
             Vissza
         </router-link>
         <div class="flex flex-col md:flex-row gap-3 items-start">
@@ -83,11 +83,11 @@
 </template>
 
 <script setup lang="ts">
-import Icon from "@/components/Icon.vue";
 import {
     UserIcon,
     CreditCardIcon,
     PlusCircleIcon,
+    ArrowLeftIcon,
 } from "@heroicons/vue/outline";
 
 import Loader from "@/components/Loader.vue";

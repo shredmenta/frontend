@@ -4,7 +4,7 @@
         class="w-full h-full flex items-center justify-center bg-login bg-cover"
     >
         <div
-            class="w-2/4 alert alert-error mb-3 absolute top-5 left-2/4 -translate-x-2/4"
+            class="w-2/4 alert alert-error mb-3 absolute top-5 left-2/4 -translate-x-2/4 transition"
             v-if="error"
         >
             <div>

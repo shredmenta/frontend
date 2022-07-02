@@ -6,38 +6,12 @@
                 class="btn btn-ghost btn-square btn-sm"
                 @click="refreshJobs"
             >
-                <svg
-                    class="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    ></path>
-                </svg>
+                <RefreshIcon></RefreshIcon>
             </button>
         </div>
         <div class="alert alert-info" v-if="jobs.length === 0">
             <div>
-                <svg
-                    class="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    ></path>
-                </svg>
+                <InformationCircleIcon class="w-6 h-6"></InformationCircleIcon>
                 Még nem indítottál spamet.
             </div>
         </div>
@@ -65,6 +39,7 @@ import Job from "./Job.vue";
 import router from "../router";
 import axios from "../api";
 import { onBeforeMount, ref } from "vue";
+import { RefreshIcon, InformationCircleIcon } from "@heroicons/vue/outline";
 
 const session = sessionStorage.getItem("session");
 if (!session) router.push("/auth/login");
